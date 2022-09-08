@@ -1,6 +1,6 @@
 export default class Config {
   static get port(): number {
-    return Number(process.env.PORT) || 3000;
+    return Number(process.env.PORT) || 8000;
   }
   static get host(): string {
     return process.env.HOST || 'localhost';

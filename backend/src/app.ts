@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 
 import Config from './lib/Config';
@@ -11,6 +12,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cors());
 
 // duty
 app.post('/duty', DutyModel.createDuty);

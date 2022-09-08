@@ -7,16 +7,18 @@ import { pool } from '../../connections';
 export default class DutyModel {
   static createDuty = (req: Request, res: Response) => {
     const { name } = req.body;
+    const id = uuid();
 
     pool.query(
       'INSERT INTO duty ("Id", "Name") VALUES ($1, $2)',
-      [uuid(), name],
-      (error: Error, results: QueryResult<Duty>) => {
+      [id, name],
+      (error: Error, _: QueryResult<Duty>) => {
         if (error) {
           throw error;
         }
 
-        res.status(201).send(`Duty created.`);
+        const duty: Duty = { Id: id, Name: name };
+        res.status(201).send(duty);
       }
     );
   };
