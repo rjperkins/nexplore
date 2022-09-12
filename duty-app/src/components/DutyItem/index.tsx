@@ -1,5 +1,5 @@
 import { Button, Input, List, Popconfirm, Tooltip } from 'antd';
-import { CheckOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ChangeEventHandler, KeyboardEventHandler, useState } from 'react';
 import { Duty } from '../../lib/Types';
 
@@ -43,7 +43,7 @@ export default function DutyItem({
           }}
         >
           <Button className="remove-duty-button" type="primary" danger>
-            X
+            <DeleteOutlined />
           </Button>
         </Popconfirm>,
       ]}

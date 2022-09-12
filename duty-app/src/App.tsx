@@ -1,4 +1,4 @@
-import { Divider } from 'antd';
+import { Divider, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { CreateDutyForm } from './components/CreateDuty';
 
@@ -10,15 +10,19 @@ import './App.css';
 
 export default function App() {
   const [duties, setDuties] = useState<Duty[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchDuties = async () => {
+    const response = await fetch(`${Config.baseUrl}/duty`);
+    const duties = (await response.json()) as Duty[];
+    setDuties(duties);
+  };
 
   useEffect(() => {
-    const fetchDuties = async () => {
-      const response = await fetch(`${Config.baseUrl}/duty`);
-      const duties = (await response.json()) as Duty[];
-      setDuties(duties);
-    };
-
-    fetchDuties().catch(console.error);
+    setLoading(true);
+    fetchDuties()
+      .then(() => setLoading(false))
+      .catch(console.error);
   }, []);
 
   const handleFormSubmit = (name: string): void => {
@@ -33,7 +37,7 @@ export default function App() {
     })
       .then((res) => res.json())
       .then((duty) => {
-        setDuties([...duties, duty]);
+        setDuties([duty, ...duties]);
       })
       .catch(console.error);
   };
@@ -46,11 +50,11 @@ export default function App() {
         'Content-Type': 'application/json',
       },
     })
-      .then(() => {
+      .catch(console.error)
+      .finally(() => {
         const newDuties = duties.filter((duty) => duty.Id !== id);
         setDuties(newDuties);
-      })
-      .catch(console.error);
+      });
   };
 
   const handleEditDuty = (duty: Duty, name: string): void => {
@@ -76,11 +80,15 @@ export default function App() {
     <>
       <Divider orientation="left">Duty to-do list</Divider>
       <CreateDutyForm onFormSubmit={handleFormSubmit} />
-      <DutyList
-        duties={duties}
-        onDutyRemoval={handleRemoveDuty}
-        onDutyEdit={handleEditDuty}
-      />
+      {!loading ? (
+        <DutyList
+          duties={duties}
+          onDutyRemoval={handleRemoveDuty}
+          onDutyEdit={handleEditDuty}
+        />
+      ) : (
+        <Spin className="spinner" />
+      )}
     </>
   );
 }
