@@ -20,6 +20,7 @@ const DutyList = ({ duties, onDutyEdit, onDutyRemoval }: DutyListProps) => (
       dataSource={duties}
       renderItem={(duty) => (
         <DutyItem
+          key={duty.Id}
           duty={duty}
           onDutyEdit={onDutyEdit}
           onDutyRemoval={onDutyRemoval}
